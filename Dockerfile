@@ -32,8 +32,13 @@ RUN apt-get update \
     && curl -sLS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer \
     && apt-get -y autoremove \
     && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
-    && mkdir -p /srv/app
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+RUN sed -ie '/^error_log =/s|.*|error_log = /proc/self/fd/2|' /etc/php/${PHP_VERSION}/fpm/php-fpm.conf \
+    && sed -ie '/^pid =/s|.*|pid = /tmp/php-fpm.pid|' /etc/php/${PHP_VERSION}/fpm/php-fpm.conf \
+    && rm /etc/php/${PHP_VERSION}/fpm/pool.d/www.conf
+
+ADD php-fpm-app.conf /etc/php/${PHP_VERSION}/fpm/pool.d/app.conf
 
 USER www-data:0
 
