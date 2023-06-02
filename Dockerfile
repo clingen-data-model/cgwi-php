@@ -15,10 +15,10 @@ ENV TZ=UTC
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends lsb-release ca-certificates curl ca-certificates zip unzip git \
-       nginx openssh-client \
+    && apt-get install -y --no-install-recommends curl ca-certificates zip unzip nginx openssh-client \
+    && . /etc/os-release \
     && curl -sSLo /usr/share/keyrings/deb.sury.org-php.gpg https://packages.sury.org/php/apt.gpg \
-    && sh -c 'echo "deb [signed-by=/usr/share/keyrings/deb.sury.org-php.gpg] https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list' \
+    && echo "deb [signed-by=/usr/share/keyrings/deb.sury.org-php.gpg] https://packages.sury.org/php/ ${VERSION_CODENAME} main" > /etc/apt/sources.list.d/php.list \
     && apt-get update \
     && apt-get install -y --no-install-recommends php${PHP_VERSION}-cli \
        php${PHP_VERSION}-sqlite3 php${PHP_VERSION}-gd \
@@ -36,9 +36,15 @@ RUN apt-get update \
 
 RUN sed -ie '/^error_log =/s|.*|error_log = /proc/self/fd/2|' /etc/php/${PHP_VERSION}/fpm/php-fpm.conf \
     && sed -ie '/^pid =/s|.*|pid = /tmp/php-fpm.pid|' /etc/php/${PHP_VERSION}/fpm/php-fpm.conf \
-    && rm /etc/php/${PHP_VERSION}/fpm/pool.d/www.conf
+    && rm /etc/php/${PHP_VERSION}/fpm/pool.d/www.conf \
+    && mkdir -p /var/log/nginx \
+    && ln -sf /dev/stdout /var/log/nginx/access.log \
+    && ln -sf /dev/stderr /var/log/nginx/error.log
 
 ADD php-fpm-app.conf /etc/php/${PHP_VERSION}/fpm/pool.d/app.conf
+ADD nginx-default.conf /etc/nginx/conf.d/default.conf
+ADD nginx.conf /etc/nginx/nginx.conf
+ADD README.md /image-README.md
 
 USER www-data:0
 
