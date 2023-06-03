@@ -15,8 +15,9 @@ the Laravel framework), available in the `/srv/app` directory. The image contain
 packages, so it's possible to run both from the same image (although typically in different containers).
 By default (defined in `/etc/nginx/conf.d/default.conf`), nginx will look to `app:9000` as the upstream
 for PHP-FPM. You might need to change that (e.g., to a socket) if nginx and the app are run in the same
-host/pod.
+host/pod, or if you are in a namespace with more than one fpm backend (like a dev and prod). The easiest
+way to do this is probably by overlay on `_upstream-fpm.conf`
 
 If you're running using docker-compose or kubernetes, you can use an entrypoint like
 `php-fpm${PHP_VERSION} -F -O` to run the php-fpm pool and one like
-`/usr/bin/nginx -g "daemon: off;"` run the nginx process.
+`/usr/sbin/nginx -g "daemon off;"` run the nginx process.
