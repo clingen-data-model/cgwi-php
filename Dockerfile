@@ -27,6 +27,7 @@ RUN apt-get update \
        php${PHP_VERSION}-xml php${PHP_VERSION}-zip \
        php${PHP_VERSION}-readline php${PHP_VERSION}-pcov \
        php${PHP_VERSION}-redis php${PHP_VERSION}-xdebug \
+       php${PHP_VERSION}-mbstring \
        php${PHP_VERSION}-fpm \
     && update-alternatives --set php /usr/bin/php${PHP_VERSION} \
     && curl -sLS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer \
