@@ -35,8 +35,8 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN sed -ie '/^error_log =/s|.*|error_log = /proc/self/fd/2|' /etc/php/${PHP_VERSION}/fpm/php-fpm.conf \
-    && sed -ie '/^pid =/s|.*|pid = /tmp/php-fpm.pid|' /etc/php/${PHP_VERSION}/fpm/php-fpm.conf \
+RUN sed -i -e '/^error_log =/s|.*|error_log = /proc/self/fd/2|' /etc/php/${PHP_VERSION}/fpm/php-fpm.conf \
+    && sed -i -e '/^pid =/s|.*|pid = /tmp/php-fpm.pid|' /etc/php/${PHP_VERSION}/fpm/php-fpm.conf \
     && rm /etc/php/${PHP_VERSION}/fpm/pool.d/www.conf \
     && mkdir -p /var/log/nginx \
     && ln -sf /dev/stdout /var/log/nginx/access.log \
