@@ -44,6 +44,7 @@ RUN sed -i -e '/^error_log =/s|.*|error_log = /proc/self/fd/2|' /etc/php/${PHP_V
 
 ADD php-fpm-app.conf /etc/php/${PHP_VERSION}/fpm/pool.d/app.conf
 ADD nginx-default.conf /etc/nginx/conf.d/default.conf
+ADD nginx-gzip.conf /etc/nginx/conf.d/nginx-gzip.conf
 ADD nginx-upstream-fpm.conf /etc/nginx/conf.d/_upstream-fpm.conf
 ADD nginx.conf /etc/nginx/nginx.conf
 ADD README.md /image-README.md
