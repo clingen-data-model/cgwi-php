@@ -17,7 +17,7 @@ on:
         description: 'PHP version'
         required: true
         type: choice
-        options: ["8.0", "8.1", "8.2"]
+        options: ["8.0", "8.1", "8.2", "8.3"]
       architecture:
         description: 'Architecture'
         required: true
