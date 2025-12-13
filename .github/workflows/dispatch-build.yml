@@ -12,12 +12,12 @@ on:
         description: 'Debian version'
         required: true
         type: choice
-        options: ["bullseye", "buster", "stretch", "bookworm"]
+        options: ["bullseye", "bookworm", "trixie"]
       php_version:
         description: 'PHP version'
         required: true
         type: choice
-        options: ["8.0", "8.1", "8.2", "8.3"]
+        options: ["8.3", "8.4", "8.5"]
       architecture:
         description: 'Architecture'
         required: true

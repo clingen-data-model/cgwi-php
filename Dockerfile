@@ -2,7 +2,7 @@ ARG DEBIAN_VERSION=bookworm
 
 FROM debian:${DEBIAN_VERSION}
 
-ARG PHP_BUILD_VERSION=8.0
+ARG PHP_BUILD_VERSION=8.5
 ENV PHP_VERSION=${PHP_BUILD_VERSION}
 
 LABEL maintainer="UNC ClinGen Workflow Infrastructure Developers"
