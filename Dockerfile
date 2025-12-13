@@ -23,7 +23,7 @@ RUN apt-get update \
   && apt-get install -y --no-install-recommends php${PHP_VERSION}-cli \
   php${PHP_VERSION}-sqlite3 php${PHP_VERSION}-gd \
   php${PHP_VERSION}-curl php${PHP_VERSION}-rdkafka \
-  php${PHP_VERSION}-imap php${PHP_VERSION}-opcache php${PHP_VERSION}-mysql \
+  php${PHP_VERSION}-imap php${PHP_VERSION}-mysql \
   php${PHP_VERSION}-xml php${PHP_VERSION}-zip \
   php${PHP_VERSION}-readline php${PHP_VERSION}-pcov \
   php${PHP_VERSION}-redis php${PHP_VERSION}-xdebug \
