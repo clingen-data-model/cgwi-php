@@ -11,13 +11,27 @@ Images are auto-generated on push to main (and with semver tags) and have images
 # How to use
 
 These are intended to be used as part of a combined image with PHP code (e.g., something based on
-the Laravel framework), available in the `/srv/app` directory. The image contains both nginx and php-fpm
-packages, so it's possible to run both from the same image (although typically in different containers).
-By default (defined in `/etc/nginx/conf.d/default.conf`), nginx will look to `app:9000` as the upstream
-for PHP-FPM. You might need to change that (e.g., to a socket) if nginx and the app are run in the same
-host/pod, or if you are in a namespace with more than one fpm backend (like a dev and prod). The easiest
-way to do this is probably by overlay on `_upstream-fpm.conf`
+the Laravel framework), available in the `/srv/app` directory. The image runs php-fpm, listening on
+port 9000 (pool config in `/etc/php/${PHP_VERSION}/fpm/pool.d/app.conf`).
+
+To serve HTTP, run the official [caddy](https://hub.docker.com/_/caddy) image as a separate container
+with the app's `public` directory mounted at `/srv/app/public` and a `Caddyfile` along these lines:
+
+```
+:8080 {
+	root * /srv/app/public
+	encode zstd gzip
+	request_body {
+		max_size 16MB
+	}
+	php_fastcgi app:9000 {
+		read_timeout 180s
+	}
+	file_server
+}
+```
+
+Change `app:9000` to wherever php-fpm is reachable (e.g., `localhost:9000` when both run in the same pod).
 
 If you're running using docker-compose or kubernetes, you can use an entrypoint like
-`php-fpm${PHP_VERSION} -F -O` to run the php-fpm pool and one like
-`/usr/sbin/nginx -g "daemon off;"` run the nginx process.
+`php-fpm${PHP_VERSION} -F -O` to run the php-fpm pool.

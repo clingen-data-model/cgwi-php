@@ -15,7 +15,7 @@ ENV TZ=UTC
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 RUN apt-get update \
-  && apt-get install -y --no-install-recommends git curl ca-certificates zip unzip nginx openssh-client tzdata-legacy \
+  && apt-get install -y --no-install-recommends git curl ca-certificates zip unzip openssh-client tzdata-legacy \
   && . /etc/os-release \
   && curl -sSLo /usr/share/keyrings/deb.sury.org-php.gpg https://packages.sury.org/php/apt.gpg \
   && echo "deb [signed-by=/usr/share/keyrings/deb.sury.org-php.gpg] https://packages.sury.org/php/ ${VERSION_CODENAME} main" > /etc/apt/sources.list.d/php.list \
@@ -37,19 +37,12 @@ RUN apt-get update \
 
 RUN sed -i -e '/^error_log =/s|.*|error_log = /proc/self/fd/2|' /etc/php/${PHP_VERSION}/fpm/php-fpm.conf \
   && sed -i -e '/^pid =/s|.*|pid = /tmp/php-fpm.pid|' /etc/php/${PHP_VERSION}/fpm/php-fpm.conf \
-  && rm /etc/php/${PHP_VERSION}/fpm/pool.d/www.conf \
-  && mkdir -p /var/log/nginx \
-  && ln -sf /dev/stdout /var/log/nginx/access.log \
-  && ln -sf /dev/stderr /var/log/nginx/error.log
+  && rm /etc/php/${PHP_VERSION}/fpm/pool.d/www.conf
 
 COPY php-fpm-app.conf /etc/php/${PHP_VERSION}/fpm/pool.d/app.conf
-COPY nginx-default.conf /etc/nginx/conf.d/default.conf
-COPY nginx-gzip.conf /etc/nginx/conf.d/nginx-gzip.conf
-COPY nginx-upstream-fpm.conf /etc/nginx/conf.d/_upstream-fpm.conf
-COPY nginx.conf /etc/nginx/nginx.conf
 COPY README.md /image-README.md
 
-RUN chmod -R g+w /etc/nginx && chmod -R g+w /etc/php
+RUN chmod -R g+w /etc/php
 
 USER www-data:0
 
